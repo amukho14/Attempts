@@ -4,6 +4,14 @@ __author__ = 'amukhopadhyay'
 from mechanize import Browser
 from bs4 import BeautifulSoup
 
+from bs4.dammit import EntitySubstitution
+def substitute_html_entities(str):
+    # return EntitySubstitution.substitute_html(str)
+    # return EntitySubstitution.substitute_html(str).replace("&acirc;&euro;&trade;","\'").replace("&acirc;&euro;&oelig;","\"").replace("&acirc;&euro;","\"").replace("&gt",">")\
+    return EntitySubstitution.substitute_html(str).replace("&ldquo;","\"").replace("&rdquo;","\"").replace("&rsquo;","'")
+
+
+
 def getOneExperience(url, pathToFile):
     br = Browser()
     br.set_handle_robots(False)
@@ -13,7 +21,9 @@ def getOneExperience(url, pathToFile):
     # url = "http://www.geeksforgeeks.org/amazon-interview-experience-set-158-off-campus/"
     br.open(url)
 
-    soup = BeautifulSoup(br.response().read())
+    soup = BeautifulSoup(str(br.response().read()), from_encoding="utf-8")
+    print(soup.prettify(formatter=substitute_html_entities))
+    soup = BeautifulSoup(soup.prettify(formatter=substitute_html_entities))
 
     for i in soup.find_all('h2',{'class':'post-title'}):
         # print i.string
@@ -35,7 +45,8 @@ def getOneExperience(url, pathToFile):
             # raw_input("wait")
             with open(pathToFile, 'a') as f:
                 # f.write((i.prettify()).encode('utf-8'))
-                f.write(str(j))
+                f.write(j.encode('utf-8').replace("\'",""))
+                # f.write("hello")
                 f.close()
 
 # url = raw_input("enter url" )
