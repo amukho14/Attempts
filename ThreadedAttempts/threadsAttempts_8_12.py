@@ -16,6 +16,7 @@ for i in range(num_threads):
   worker = Thread(target=do_stuff, args=(q,))
   worker.setDaemon(True)
   worker.start()
+  print "first"
 
 # for x in range(100):
 #   q.put(x)
@@ -25,5 +26,6 @@ for y in range (10):
     q.put(x + y * 100)
   q.join()
   print "Batch " + str(y) + " Done"
+  print "second"
 
 q.join()
